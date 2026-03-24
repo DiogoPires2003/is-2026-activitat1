@@ -13,6 +13,26 @@ object Tree:
 
   // Exercises
 
-  def mirror[A](t: Tree[A]): Tree[A] = ???
+  def mirror_REC[A](t: Tree[A]): Tree[A] = t match
+    case Tree.Leaf(v) => Tree.Leaf(v)
+    case Tree.Branch(l, r) => Tree.Branch(mirror_REC(r), mirror_REC(l))
 
-  def collect[A](t: Tree[A]): List[A] = ???
+  def mirror_FOLD[A](t: Tree[A]): Tree[A] =
+    t.fold[Tree[A]](
+      v => Tree.Leaf(v),
+      (l, r) => Tree.Branch(r, l)
+    )
+
+  def mirror[A](t: Tree[A]): Tree[A] = mirror_FOLD(t)
+
+  def collect_REC[A](t: Tree[A]): List[A] = t match
+    case Tree.Leaf(v) => List.Cons(v, List.Nil)
+    case Tree.Branch(l, r) => List.append(collect_REC(l), collect_REC(r))
+
+  def collect_FOLD[A](t: Tree[A]): List[A] =
+    t.fold[List[A]](
+      v => List.Cons(v, List.Nil),
+      (l, r) => List.append(l, r)
+    )
+
+  def collect[A](t: Tree[A]): List[A] = collect_FOLD(t)
